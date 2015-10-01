@@ -1,0 +1,10 @@
+{
+	"*": {
+		"*": [
+			"shellenv",
+			"golangconfig",
+			"newterm",
+			"package_events"
+		]
+	}
+}

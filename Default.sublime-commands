@@ -1,0 +1,18 @@
+[
+    {
+        "caption": "Golang Build: Get",
+        "command": "golang_build_get"
+    },
+    {
+        "caption": "Golang Build: Cancel",
+        "command": "golang_build_cancel"
+    },
+    {
+        "caption": "Golang Build: Reopen Output",
+        "command": "golang_build_reopen"
+    },
+    {
+        "caption": "Golang Build: Terminal",
+        "command": "golang_build_terminal"
+    }
+]

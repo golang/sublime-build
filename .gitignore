@@ -1,0 +1,7 @@
+*.tmLanguage.cache
+*.pyc
+__pycache__
+dev/coverage_reports/
+dev/go_projects/src/github.com/
+dev/go_projects/pkg/
+dev/go_projects/bin/

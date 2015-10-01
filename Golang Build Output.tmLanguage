@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Golang Build Output</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.line.double-slash.go</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>markup.inserted.diff</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>^(&gt; Result: )(Success)$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.line.double-slash.go</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>markup.deleted.diff</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>^(&gt; Result: )(Error|Cancelled)$</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.line.double-slash.go</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>markup.changed.diff</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>^(&gt; Elapsed: )(.*)$</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^(&gt; (Directory|Environment|Command|Output):[ \n])(.*)$</string>
+			<key>name</key>
+			<string>comment.line.double-slash.go</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^(&gt;   )(\w+)(=)(.*)$</string>
+			<key>name</key>
+			<string>comment.line.double-slash.go</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>output.golang_build</string>
+	<key>uuid</key>
+	<string>E3A415F0-3F50-11E0-9207-1911300C9A67</string>
+</dict>
+</plist>
