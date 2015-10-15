@@ -73,7 +73,7 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
             command line to learn about available flags.
         """
 
-        if _yeild_to_running_build(self.window):
+        if _yield_to_running_build(self.window):
             return
 
         working_dir = _determine_working_dir(self.window)
@@ -254,7 +254,7 @@ class GolangBuildGetCommand(sublime_plugin.WindowCommand):
             flags.
         """
 
-        if _yeild_to_running_build(self.window):
+        if _yield_to_running_build(self.window):
             return
 
         working_dir = _determine_working_dir(self.window)
@@ -353,7 +353,7 @@ class GolangBuildTerminalCommand(sublime_plugin.WindowCommand):
         newterm.launch_terminal(working_dir, env=env_overrides)
 
 
-def _yeild_to_running_build(window):
+def _yield_to_running_build(window):
     """
     Check if a build is already running, and if so, allow the user to stop it,
     or cancel the new build

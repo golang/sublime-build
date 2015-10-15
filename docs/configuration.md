@@ -13,6 +13,8 @@ different configuration for different Sublime Text projects.
    - [OS-Specific Settings](#os-specific-settings)
    - [Project-Specific Settings](#project-specific-settings)
  - [Command Flags](#command-flags)
+   - [Formatting Command Flag Settings](#formatting-command-flag-settings)
+   - [Command Flag Setting Locations](#command-flag-setting-locations)
 
 ## Environment Autodetection
 
@@ -156,9 +158,52 @@ have its flags customized. The settings names are:
  - `cross_compile:flags` for "go build" with GOOS and GOARCH
  - `get:flags` for "go get"
 
-Each setting must have a value that is a list of strings.
+Any valid flag may be passed to the `go` executable via these settings.
 
-The most common location to set these settings will be in a project file:
+### Formatting Command Flag Settings
+
+Each setting must have a value that is a list of strings. Each list element
+contains a single command line argument.
+
+A flag without a value would be formatted as:
+
+```json
+{
+    "build:flags": ["-x"]
+}
+```
+
+Multiple flags are formatted as separate strings:
+
+```json
+{
+    "build:flags": ["-x", "-a"]
+}
+```
+
+If a flag accepts a value, the value should be added as a second string:
+
+```json
+{
+    "build:flags": ["-p", "4"]
+}
+```
+
+Strings arguments may contain spaces. The Golang Build package will ensure
+they are properly quoted when invoking the `go ` executable.
+
+```json
+{
+    "build:flags": ["-ldflags", "-L/usr/local/lib -L/opt/lib"]
+}
+```
+
+All flags are inserted at the end of the command line arguments, except in the
+case of `go get`, where they are placed before the URL to get.
+
+### Command Flag Setting Locations
+
+The most common location to set flag settings will be in a project file:
 
 ```json
 {
@@ -196,3 +241,17 @@ An example of settings for just OS X, within a project file:
     }
 }
 ```
+
+If flags should be applied to all Go builds, irrespective of project, the
+settings may be added to the
+[global Sublime Text settings](#global-sublime-text-settings):
+
+```json
+{
+    "build:flags": ["-a", "-race"]
+}
+```
+
+Do note that settings do not combine from the global Sublime Text settings and
+project settings. Instead, any settings in a more specific location will
+override those in a less specific location.

@@ -20,7 +20,7 @@ The Golang Build Sublime Text package is structured as follows:
  - Configuration uses the Package Control dependency golangconfig, which allows
    users to set settings globally in Sublime Text, for each OS globally,
    per-project, or for each OS in a project
- - Settings exists that allow users to customize command line flags on a
+ - Settings exist that allow users to customize command line flags on a
    per-task-basis
 
 As is dictated by the Sublime Text API, the following list shows a mapping of
