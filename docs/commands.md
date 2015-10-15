@@ -69,7 +69,7 @@ by the *Preferences > Browse Packages...* menu entry.
 ```json
 [
     {
-        "caption": "Golang Build: Test (Print Commands)",
+        "caption": "Go: Test (Print Commands)",
         "command": "golang_build",
         "args": {
             "task": "test",
