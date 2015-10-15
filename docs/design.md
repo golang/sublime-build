@@ -3,7 +3,7 @@
 The Golang Build Sublime Text package is structured as follows:
 
  - The primary user interaction happens through the Sublime Text build system,
-   which parses the "Golang Build.sublime-build" file
+   which parses the "Go.sublime-build" file
  - The primary build task is "go build", but variants exists for "go test",
    "go install", "go clean" and cross-compile, which is "go build" with GOOS
    and GOARCH set. All of these tasks are executing by the Sublime Text command
