@@ -709,6 +709,7 @@ class GolangProcessPrinter():
         """
 
         self.panel.printer_lock.acquire()
+        self.panel.set_base_dir(self.proc.cwd)
 
         try:
             self._write_header()
@@ -845,12 +846,26 @@ class GolangPanel():
         panel_settings = self.panel.settings()
         panel_settings.set('syntax', 'Packages/Golang Build/Golang Build Output.tmLanguage')
         panel_settings.set('color_scheme', st_settings.get('color_scheme'))
+        panel_settings.set('result_file_regex', '^(.+\.go):([0-9]+):(?:([0-9]+):)?\s*(.*)')
         panel_settings.set('draw_white_space', 'selection')
         panel_settings.set('word_wrap', False)
         panel_settings.set("auto_indent", False)
         panel_settings.set('line_numbers', False)
         panel_settings.set('gutter', False)
         panel_settings.set('scroll_past_end', False)
+
+    def set_base_dir(self, cwd):
+        """
+        Set the directory the process is being run in, for the sake of result
+        navigation
+
+        :param cwd:
+            A unicode string of the working directory
+        """
+
+        def _update_settings():
+            self.panel.settings().set('result_base_dir', cwd)
+        sublime.set_timeout(_update_settings, 1)
 
     def write(self, string, content_separator=None, event=None):
         """
