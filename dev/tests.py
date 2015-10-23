@@ -69,7 +69,7 @@ class GolangBuildTests(unittest.TestCase):
         file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
 
         def _run_build(view, result_queue):
-            view.window().run_command('golang_build', {'flags': ['-x']})
+            view.window().run_command('golang_build', {'flags': ['-v', '-x']})
 
         result_queue = open_file(file_path, VIEW_SETTINGS, _run_build)
         result = wait_build(result_queue)
@@ -81,7 +81,7 @@ class GolangBuildTests(unittest.TestCase):
 
         file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
 
-        with GolangBuildMock(sublime_settings={'build:flags': ['-x']}):
+        with GolangBuildMock(sublime_settings={'build:flags': ['-v', '-x']}):
             def _run_build(view, result_queue):
                 view.window().run_command('golang_build')
 
@@ -99,7 +99,7 @@ class GolangBuildTests(unittest.TestCase):
             view.window().run_command('golang_build', {'task': 'install'})
 
         custom_view_settings = VIEW_SETTINGS.copy()
-        custom_view_settings['install:flags'] = ['-x']
+        custom_view_settings['install:flags'] = ['-v', '-x']
 
         result_queue = open_file(file_path, custom_view_settings, _run_build)
         result = wait_build(result_queue)
@@ -190,7 +190,7 @@ class GolangBuildTests(unittest.TestCase):
             sublime.set_clipboard('github.com/golang/example/hello')
             notify_user('Paste from the clipboard into the input panel')
             begin_event.set()
-            view.window().run_command('golang_build_get', {'flags': ['-d']})
+            view.window().run_command('golang_build_get', {'flags': ['-v', '-d']})
 
         result_queue = open_file(file_path, VIEW_SETTINGS, _run_build)
         begin_event.wait()
@@ -203,7 +203,7 @@ class GolangBuildTests(unittest.TestCase):
 
         file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
 
-        with GolangBuildMock(sublime_settings={'get:flags': ['-d']}):
+        with GolangBuildMock(sublime_settings={'get:flags': ['-v', '-d']}):
             def _run_build(view, result_queue):
                 view.window().run_command('golang_build_get', {'url': 'github.com/golang/example/hello'})
 

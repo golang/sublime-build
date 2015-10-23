@@ -97,6 +97,9 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
                 window=self.window
             )
 
+        if flags is None:
+            flags = ['-v']
+
         if task == 'cross_compile':
             _task_cross_compile(
                 self,
@@ -107,7 +110,7 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
             )
             return
 
-        args = [go_bin, task, '-v']
+        args = [go_bin, task]
         if flags and isinstance(flags, list):
             args.extend(flags)
         proc = _run_process(
@@ -181,7 +184,7 @@ def _task_cross_compile(command, go_bin, flags, working_dir, env):
 
         env['GOOS'], env['GOARCH'] = valid_combinations[index]
 
-        args = [go_bin, 'build', '-v']
+        args = [go_bin, 'build']
         if flags and isinstance(flags, list):
             args.extend(flags)
         proc = _run_process(
@@ -278,6 +281,9 @@ class GolangBuildGetCommand(sublime_plugin.WindowCommand):
                 window=self.window
             )
 
+        if flags is None:
+            flags = ['-v']
+
         def on_done(get_url):
             """
             Processes the user's input and launches the "go get" command
@@ -286,7 +292,7 @@ class GolangBuildGetCommand(sublime_plugin.WindowCommand):
                 A unicode string of the URL to get
             """
 
-            args = [go_bin, 'get', '-v']
+            args = [go_bin, 'get']
             if flags and isinstance(flags, list):
                 args.extend(flags)
             args.append(get_url)
