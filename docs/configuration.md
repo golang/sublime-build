@@ -15,6 +15,7 @@ different configuration for different Sublime Text projects.
  - [Command Flags](#command-flags)
    - [Formatting Command Flag Settings](#formatting-command-flag-settings)
    - [Command Flag Setting Locations](#command-flag-setting-locations)
+   - [Using Command Flags to Specify Build and Install Targets](#using-command-flags-to-specify-build-and-install-targets)
 
 ## Environment Autodetection
 
@@ -255,3 +256,66 @@ settings may be added to the
 Do note that settings do not combine from the global Sublime Text settings and
 project settings. Instead, any settings in a more specific location will
 override those in a less specific location.
+
+### Using Command Flags to Specify Build and Install Targets
+
+The default behavior of the build commands is to execute the `go` tool in the
+directory containing the file currently being edited. This behavior is
+consistent with other Sublime Text build systems and is what users typically
+expect.
+
+With Go projects, you may want to override this default for commands such as
+`go install`. Consider a project containing a single executable command
+(defined by a Go package containing a main function) in the directory:
+
+```
+$GOPATH/src/github.com/username/projectname/mycommand
+```
+
+The project contains a large set of library packages that are used by the
+`mycommand` program. These libraries are located in:
+
+```
+$GOPATH/github.com/username/projectname/users
+$GOPATH/github.com/username/projectname/events
+```
+
+Running `go install` from within these two directories will result in the
+creation of the `.a` files in the `$GOPATH/pkg` directory.
+
+However, it may be more desirable to always have `go install` compile and
+install the `mycommand` program into your `$GOPATH/bin` directory, regardless
+of the location of the source file you are currently editing.
+
+To achieve this, you can use the flag override mechanism in your project
+configuration file:
+
+```json
+{
+    "folders":
+    [
+        {
+            "path": "/Users/jbuberel/workspace/src"
+        }
+    ],
+    "settings": {
+        "golang": {
+            "install:flags": ["-v", "github.com/myusername/myproject/mycommand"]
+        }
+    }
+}
+```
+
+This configuration will cause the following command to be used when running the
+`Go: Install` build command:
+
+```
+> Environment:
+>   GOPATH=/Users/jbuberel/workspace-shared:/Users/jbuberel/workspace
+> Directory: /Users/jbuberel
+> Command: /Users/jbuberel/go15/bin/go install -v github.com/myusername/myprojectname/mycommand
+> Output:
+github.com/myusername/myprojectname/mycommand
+> Elapsed: 0.955s
+> Result: Success
+```
