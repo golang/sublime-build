@@ -15,7 +15,7 @@ different configuration for different Sublime Text projects.
  - [Command Flags](#command-flags)
    - [Formatting Command Flag Settings](#formatting-command-flag-settings)
    - [Command Flag Setting Locations](#command-flag-setting-locations)
-   - [Using Command Flags to Specify Build and Install Targets](#using-command-flags-to-specify-build-and-install-targets)
+   - [Using Command Flags to Specify Build, Run and Install Targets](#using-command-flags-to-specify-build-run-and-install-targets)
 
 ## Environment Autodetection
 
@@ -55,9 +55,12 @@ To set variables for use in Sublime Text windows, you will want to edit your
 
 Settings are placed in a json structure. Common settings include:
 
- - `PATH` - a list of directories to search for executables within. On Windows
-   these are separated by `;`. OS X and Linux use `:` as a directory separator.
- - `GOPATH` - a string of the path to the root of your Go environment
+ - `PATH` - a string containing a list of directories to search for executables
+   within. On Windows these are separated by `;`. OS X and Linux use `:` as a
+   directory separator.
+ - `GOPATH` - a string containing one or more Go workspace paths. Like `PATH`,
+   on Windows multiple paths are separated by `;`, on OS X and Linux they are
+   separated by `:`.
 
 Other Go environment variables will be used if set. Examples include: `GOOS`,
 `GOARCH`, `GOROOT` and `GORACE`. The
@@ -153,6 +156,7 @@ the [Settings Load Order section](#settings-load-order), each build variant may
 have its flags customized. The settings names are:
 
  - `build:flags` for "go build"
+ - `run:flags` for "go run"
  - `test:flags` for "go test"
  - `install:flags` for "go install"
  - `clean:flags` for "go clean"
@@ -257,7 +261,7 @@ Do note that settings do not combine from the global Sublime Text settings and
 project settings. Instead, any settings in a more specific location will
 override those in a less specific location.
 
-### Using Command Flags to Specify Build and Install Targets
+### Using Command Flags to Specify Build, Run and Install Targets
 
 The default behavior of the build commands is to execute the `go` tool in the
 directory containing the file currently being edited. This behavior is
@@ -295,7 +299,7 @@ configuration file:
     "folders":
     [
         {
-            "path": "/Users/jbuberel/workspace/src"
+            "path": "/Users/jsmith/workspace/src"
         }
     ],
     "settings": {
@@ -311,11 +315,35 @@ This configuration will cause the following command to be used when running the
 
 ```
 > Environment:
->   GOPATH=/Users/jbuberel/workspace-shared:/Users/jbuberel/workspace
-> Directory: /Users/jbuberel
-> Command: /Users/jbuberel/go15/bin/go install -v github.com/myusername/myprojectname/mycommand
+>   GOPATH=/Users/jsmith/workspace-shared:/Users/jsmith/workspace
+> Directory: /Users/jsmith
+> Command: /Users/jsmith/go15/bin/go install -v github.com/myusername/myprojectname/mycommand
 > Output:
 github.com/myusername/myprojectname/mycommand
 > Elapsed: 0.955s
 > Result: Success
 ```
+
+Another common command to use a custom flag with is `Go: Run`. With the Run
+build variant, the file to execute may be specified as either an absolute file
+path, or relative to the `$GOPATH/src/` directory.
+
+```json
+{
+    "folders":
+    [
+        {
+            "path": "/Users/jsmith/workspace/src"
+        }
+    ],
+    "settings": {
+        "golang": {
+            "run:flags": ["-v", "github.com/myusername/myproject/main.go"]
+        }
+    }
+}
+```
+
+If the file path is relative to `$GOPATH/src/`, it will be automatically
+expanded so the `go` tool will process it properly. In the case that `$GOPATH`
+has multiple entries, the first with a matching filename will be used.

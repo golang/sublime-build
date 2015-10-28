@@ -19,6 +19,7 @@ following args:
 
  - `task`: A string of the build task to perform. Accepts the following values:
    - `"build"`: executes `go build -v`
+   - `"run"`: executes `go run -v {current_filename}`
    - `"test"`: executes `go test -v`
    - `"install"`: executes `go install -v`
    - `"clean"`: executes `go clean -v`

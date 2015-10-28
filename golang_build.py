@@ -10,10 +10,14 @@ import re
 import textwrap
 import collections
 
+import signal
+
 if sys.version_info < (3,):
     import Queue as queue
+    str_cls = unicode  # noqa
 else:
     import queue
+    str_cls = str
 
 import sublime
 import sublime_plugin
@@ -99,6 +103,43 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
 
         if flags is None:
             flags = ['-v']
+
+        if task == 'run':
+            # Allow the user to set a file path into the flags settings,
+            # thus requiring that the flags be checked to ensure a second
+            # filename is not added
+            found_filename = False
+
+            # Allow users to call "run" with a src-relative file path. Because
+            # of that, flags may be rewritten since the "go run" does not
+            # accept such file paths.
+            use_new_flags = False
+            new_flags = []
+
+            gopaths = env['GOPATH'].split(os.pathsep)
+
+            for flag in flags:
+                if flag.endswith('.go'):
+                    absolute_path = flag
+                    if os.path.isfile(absolute_path):
+                        found_filename = True
+                        break
+
+                    # If the file path is src-relative, rewrite the flag
+                    for gopath in gopaths:
+                        gopath_relative = os.path.join(gopath, 'src', flag)
+                        if os.path.isfile(gopath_relative):
+                            found_filename = True
+                            flag = gopath_relative
+                            use_new_flags = True
+                            break
+                new_flags.append(flag)
+
+            if use_new_flags:
+                flags = new_flags
+
+            if not found_filename:
+                flags.append(self.window.active_view().file_name())
 
         if task == 'cross_compile':
             _task_cross_compile(
@@ -568,9 +609,15 @@ class GolangProcess():
         self.env = env
 
         startupinfo = None
+        preexec_fn = None
         if sys.platform == 'win32':
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        else:
+            # On posix platforms we create a new process group by executing
+            # os.setsid() after the fork before the go binary is executed. This
+            # allows us to use os.killpg() to kill the whole process group.
+            preexec_fn = os.setsid
 
         self._cleanup_lock = threading.Lock()
         self.started = time.time()
@@ -580,7 +627,8 @@ class GolangProcess():
             stderr=subprocess.PIPE,
             cwd=cwd,
             env=env,
-            startupinfo=startupinfo
+            startupinfo=startupinfo,
+            preexec_fn=preexec_fn
         )
         self.finished = False
 
@@ -625,7 +673,27 @@ class GolangProcess():
         try:
             if not self.proc:
                 return
-            self.proc.terminate()
+
+            if sys.platform != 'win32':
+                # On posix platforms we send SIGTERM to the whole process
+                # group to ensure both go and the compiled temporary binary
+                # are killed.
+                os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
+            else:
+                # On Windows, there is no API to get the child processes
+                # of a process and send signals to them all. Attempted to use
+                # startupinfo.dwFlags with CREATE_NEW_PROCESS_GROUP and then
+                # calling self.proc.send_signal(signal.CTRL_BREAK_EVENT),
+                # however that did not kill the temporary binary. taskkill is
+                # part of Windows XP and newer, so we use that.
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                kill_proc = subprocess.Popen(
+                    ['taskkill', '/F', '/T', '/PID', str_cls(self.proc.pid)],
+                    startupinfo=startupinfo
+                )
+                kill_proc.wait()
+
             self.result = 'cancelled'
             self.finished = time.time()
             self.proc = None

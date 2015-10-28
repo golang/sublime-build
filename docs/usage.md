@@ -18,6 +18,7 @@ To use the *Go* build system, open the *Tools > Build System* menu and select
 The variants included with the build system include:
 
  - **Build**, which executes `go build`
+ - **Run**, which executes `go run` with the current filepath
  - **Test**, which executes `go test`
  - **Install**, which executes `go install`
  - **Cross-Compile (Interactive)**, which executes `go build` with `GOOS` and
@@ -30,6 +31,7 @@ any of the variants.
 On Sublime Text 3, the command palette entries will be:
 
  - `Build with: Go`
+ - `Build with: Go - Run`
  - `Build with: Go - Test`
  - `Build with: Go - Install`
  - `Build with: Go - Cross-Compile (Interactive)`
@@ -38,6 +40,7 @@ On Sublime Text 3, the command palette entries will be:
 On Sublime Text 2, the command palette entries will be:
 
  - `Build: Build`
+ - `Build: Run`
  - `Build: Test`
  - `Build: Install`
  - `Build: Cross-Compile (Interactive)`
@@ -70,6 +73,6 @@ the [configuration documentation](configuration.md).
 
 ## Commands
 
-For information on the available commands, their arguments and example key
+For information on the available commands, their arguments, example key
 bindings and command palette entries, please read the
 [commands documentation](commands.md).

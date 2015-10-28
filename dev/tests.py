@@ -24,6 +24,7 @@ from .mocks import GolangBuildMock
 
 
 TEST_GOPATH = path.join(path.dirname(__file__), 'go_projects')
+TEST_GOPATH2 = path.join(path.dirname(__file__), 'go_projects2')
 VIEW_SETTINGS = {
     'GOPATH': TEST_GOPATH,
     'GOOS': None,
@@ -39,16 +40,21 @@ CROSS_COMPILE_OS = 'darwin' if sys.platform != 'darwin' else 'linux'
 class GolangBuildTests(unittest.TestCase):
 
     def setUp(self):
-        for subdir in ('pkg', 'bin', 'src'):
-            full_path = path.join(TEST_GOPATH, subdir)
-            for entry in os.listdir(full_path):
-                if entry in set(['.git-keep', 'good', 'bad']):
-                    continue
-                entry_path = path.join(full_path, entry)
-                if path.isdir(entry_path):
-                    shutil.rmtree(entry_path)
-                else:
-                    os.remove(entry_path)
+        skip_entries = {}
+        skip_entries[TEST_GOPATH] = set(['.git-keep', 'good', 'bad', 'runnable'])
+        skip_entries[TEST_GOPATH2] = set(['.git-keep', 'runnable2'])
+
+        for gopath in (TEST_GOPATH, TEST_GOPATH2):
+            for subdir in ('pkg', 'bin', 'src'):
+                full_path = path.join(gopath, subdir)
+                for entry in os.listdir(full_path):
+                    if entry in skip_entries[gopath]:
+                        continue
+                    entry_path = path.join(full_path, entry)
+                    if path.isdir(entry_path):
+                        shutil.rmtree(entry_path)
+                    else:
+                        os.remove(entry_path)
 
     def test_build(self):
         ensure_not_ui_thread()
@@ -131,6 +137,68 @@ class GolangBuildTests(unittest.TestCase):
         result = wait_build(result_queue)
         self.assertEqual('success', result)
         self.assertTrue(confirm_user('Did "go test" succeed?'))
+
+    def test_run(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'runnable', 'main.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'run'})
+
+        result_queue = open_file(file_path, VIEW_SETTINGS, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go run" succeed?'))
+
+    def test_run_with_file_path_flag_absolute(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'run'})
+
+        custom_view_settings = VIEW_SETTINGS.copy()
+        custom_view_settings['run:flags'] = [os.path.join(TEST_GOPATH, 'src', 'runnable', 'main.go')]
+
+        result_queue = open_file(file_path, custom_view_settings, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go run" succeed for runnable/main.go?'))
+
+    def test_run_with_file_path_flag_relative(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'run'})
+
+        custom_view_settings = VIEW_SETTINGS.copy()
+        custom_view_settings['run:flags'] = ['runnable/main.go']
+
+        result_queue = open_file(file_path, custom_view_settings, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go run" succeed for runnable/main.go?'))
+
+    def test_run_with_file_path_flag_relative_multiple_gopath(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'run'})
+
+        custom_view_settings = VIEW_SETTINGS.copy()
+        custom_view_settings['GOPATH'] = os.pathsep.join([TEST_GOPATH, TEST_GOPATH2])
+        custom_view_settings['run:flags'] = ['runnable2/main.go']
+
+        result_queue = open_file(file_path, custom_view_settings, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go run" succeed for runnable2/main.go?'))
 
     def test_install(self):
         ensure_not_ui_thread()

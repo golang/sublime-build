@@ -7,6 +7,7 @@ The package consists of the following features:
 
  - A Sublime Text build system for executing:
    - `go build`
+   - `go run`
    - `go install`
    - `go test`
    - `go clean`

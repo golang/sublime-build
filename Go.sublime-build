@@ -4,6 +4,10 @@
 
     "variants": [
         {
+            "name": "Run",
+            "task": "run"
+        },
+        {
             "name": "Test",
             "task": "test"
         },
