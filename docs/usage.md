@@ -31,7 +31,7 @@ any of the variants.
 On Sublime Text 3, the command palette entries will be:
 
  - `Build with: Go`
- - `Build with: Go - Run`
+ - `Build with: Go - Run` (see [Cancelling a Build](#cancelling-a-build) below)
  - `Build with: Go - Test`
  - `Build with: Go - Install`
  - `Build with: Go - Cross-Compile (Interactive)`
@@ -40,7 +40,7 @@ On Sublime Text 3, the command palette entries will be:
 On Sublime Text 2, the command palette entries will be:
 
  - `Build: Build`
- - `Build: Run`
+ - `Build: Run` (see [Cancelling a Build](#cancelling-a-build) below)
  - `Build: Test`
  - `Build: Install`
  - `Build: Cross-Compile (Interactive)`
@@ -49,7 +49,16 @@ On Sublime Text 2, the command palette entries will be:
 ### Cancelling a Build
 
 If a build is running and needs to be stopped, the command palette will contain
-an extra entry `Go: Cancel Build`.
+an extra entry `Go: Cancel Build`. When using the `Go - Run` command with a
+long-running program, you'll need to use this cancel command palette entry to
+stop the running process.
+
+For convenience, you can bind this command to a shortcut by inserting the
+following into your `Preferences -> Keybindings - Default` file:
+
+```json
+    { "keys": ["command+shift+c"], "command": "golang_build_cancel" }
+```
 
 ### Reopening Build Results
 
