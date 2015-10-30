@@ -528,7 +528,7 @@ def _get_config(executable_name, required_vars, optional_vars=None, view=None, w
         if sublime.ok_cancel_dialog(_format_message(prompt), 'Open Documentation'):
             window.run_command(
                 'open_url',
-                {'url': 'https://go.googlesource.com/sublime-build/+/master/docs/configuration.md'}
+                {'url': 'https://github.com/golang/sublime-build/blob/master/docs/configuration.md'}
             )
 
     except (golangconfig.EnvVarError) as e:
@@ -548,7 +548,7 @@ def _get_config(executable_name, required_vars, optional_vars=None, view=None, w
         if sublime.ok_cancel_dialog(_format_message(prompt), 'Open Documentation'):
             window.run_command(
                 'open_url',
-                {'url': 'https://go.googlesource.com/sublime-build/+/master/docs/configuration.md'}
+                {'url': 'https://github.com/golang/sublime-build/blob/master/docs/configuration.md'}
             )
 
     return (None, None)
