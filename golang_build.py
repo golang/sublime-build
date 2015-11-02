@@ -551,6 +551,23 @@ def _get_config(executable_name, required_vars, optional_vars=None, view=None, w
                 {'url': 'https://github.com/golang/sublime-build/blob/master/docs/configuration.md'}
             )
 
+    except (golangconfig.GoRootNotFoundError, golangconfig.GoPathNotFoundError) as e:
+        error_message = '''
+            Golang Build
+
+            %s.
+
+            Would you like to view the configuration documentation?
+        '''
+
+        prompt = error_message % str_cls(e)
+
+        if sublime.ok_cancel_dialog(_format_message(prompt), 'Open Documentation'):
+            window.run_command(
+                'open_url',
+                {'url': 'https://github.com/golang/sublime-build/blob/master/docs/configuration.md'}
+            )
+
     return (None, None)
 
 

@@ -442,6 +442,27 @@ class GolangBuildTests(unittest.TestCase):
             self.assertTrue(confirm_user('Were you prompted that GOPATH was not set?'))
             self.assertTrue(confirm_user('When you pressed "Open Documentation", was it opened in your browser?'))
 
+    def test_build_missing_gopath(self):
+        ensure_not_ui_thread()
+
+        shell, env = shellenv.get_env()
+        env['GOPATH'] += '12345678'
+        with GolangBuildMock(shell=shell, env=env):
+
+            file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+            def _run_build(view, result_queue):
+                notify_user('Press the "Open Documentation" button when prompted about GOPATH not being found')
+
+                view.window().run_command('golang_build')
+
+            custom_view_settings = VIEW_SETTINGS.copy()
+            del custom_view_settings['GOPATH']
+            open_file(file_path, custom_view_settings, _run_build)
+            time.sleep(0.5)
+            self.assertTrue(confirm_user('Were you prompted that GOPATH was not found?'))
+            self.assertTrue(confirm_user('When you pressed "Open Documentation", was it opened in your browser?'))
+
 
 def ensure_not_ui_thread():
     """
