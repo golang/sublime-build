@@ -138,6 +138,51 @@ class GolangBuildTests(unittest.TestCase):
         self.assertEqual('success', result)
         self.assertTrue(confirm_user('Did "go test" succeed?'))
 
+    def test_benchmark(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'benchmark'})
+
+        result_queue = open_file(file_path, VIEW_SETTINGS, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go test" succeed running all benchmarks?'))
+
+    def test_benchmark_with_bench_flag(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'benchmark'})
+
+        custom_view_settings = VIEW_SETTINGS.copy()
+        custom_view_settings['benchmark:flags'] = ['-bench', 'BenchmarkRuneLenResumeNew']
+
+        result_queue = open_file(file_path, custom_view_settings, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go test" succeed running only BenchmarkRuneLenResumeNew?'))
+
+    def test_benchmark_with_benchmem_flag(self):
+        ensure_not_ui_thread()
+
+        file_path = path.join(TEST_GOPATH, 'src', 'good', 'rune_len.go')
+
+        def _run_build(view, result_queue):
+            view.window().run_command('golang_build', {'task': 'benchmark'})
+
+        custom_view_settings = VIEW_SETTINGS.copy()
+        custom_view_settings['benchmark:flags'] = ['-benchmem']
+
+        result_queue = open_file(file_path, custom_view_settings, _run_build)
+        result = wait_build(result_queue)
+        self.assertEqual('success', result)
+        self.assertTrue(confirm_user('Did "go test" succeed running benchmarks with memory allocation stats?'))
+
     def test_run(self):
         ensure_not_ui_thread()
 

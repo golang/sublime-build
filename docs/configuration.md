@@ -158,6 +158,7 @@ have its flags customized. The settings names are:
  - `build:flags` for "go build"
  - `run:flags` for "go run"
  - `test:flags` for "go test"
+ - `benchmark:flags` for "go test -bench=."
  - `install:flags` for "go install"
  - `clean:flags` for "go clean"
  - `cross_compile:flags` for "go build" with GOOS and GOARCH

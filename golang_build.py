@@ -66,7 +66,7 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
         command palette or sublime.Window.run_command()
 
         :param task:
-            A unicode string of "build", "test", "install", "clean"
+            A unicode string of "build", "test", "benchmark", "install", "clean"
             or "cross_compile"
 
         :param flags:
@@ -150,6 +150,24 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
                 env
             )
             return
+
+        if task == 'benchmark':
+            # Switch back to the real Go command-line arg
+            task = 'test'
+
+            # Allow user to set a regexp for the benchmarks to run
+            found_bench_flag = False
+
+            # Need to match '-bench=xyz', ['-bench','xyz'], ['-bench','.']
+            # Don't match '-benchmem' or '-benchtime'
+            # Remember user can't specify spaces in flags
+            for flag in flags:
+                if flag == '-bench' or flag.startswith('-bench='):
+                    found_bench_flag = True
+
+            # Otherwise default to running all benchmarks
+            if not found_bench_flag:
+                flags.append('-bench=.')
 
         args = [go_bin, task]
         if flags and isinstance(flags, list):

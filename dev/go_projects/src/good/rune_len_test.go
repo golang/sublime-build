@@ -22,3 +22,15 @@ func TestRuneLen(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkRuneLenResume(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		RuneLen("résumé")
+	}
+}
+
+func BenchmarkRuneLenResumeNew(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		RuneLen("résumé – new")
+	}
+}

@@ -12,6 +12,10 @@
             "task": "test"
         },
         {
+            "name": "Benchmark",
+            "task": "benchmark"
+        },
+        {
             "name": "Install",
             "task": "install"
         },

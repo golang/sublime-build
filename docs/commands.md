@@ -21,6 +21,7 @@ following args:
    - `"build"`: executes `go build -v`
    - `"run"`: executes `go run -v {current_filename}`
    - `"test"`: executes `go test -v`
+   - `"benchmark"`: executes `go test -v -bench=.`
    - `"install"`: executes `go install -v`
    - `"clean"`: executes `go clean -v`
    - `"cross_compile"`: executes `go build -v` with `GOOS` and `GOARCH` set

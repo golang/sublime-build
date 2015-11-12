@@ -20,6 +20,7 @@ The variants included with the build system include:
  - **Build**, which executes `go build`
  - **Run**, which executes `go run` with the current filepath
  - **Test**, which executes `go test`
+ - **Benchmark**, which executes `go test -bench=.`
  - **Install**, which executes `go install`
  - **Cross-Compile (Interactive)**, which executes `go build` with `GOOS` and
    `GOARCH` set
@@ -33,6 +34,7 @@ On Sublime Text 3, the command palette entries will be:
  - `Build with: Go`
  - `Build with: Go - Run` (see [Cancelling a Build](#cancelling-a-build) below)
  - `Build with: Go - Test`
+ - `Build with: Go - Benchmark`
  - `Build with: Go - Install`
  - `Build with: Go - Cross-Compile (Interactive)`
  - `Build with: Go - Clean`
@@ -42,6 +44,7 @@ On Sublime Text 2, the command palette entries will be:
  - `Build: Build`
  - `Build: Run` (see [Cancelling a Build](#cancelling-a-build) below)
  - `Build: Test`
+ - `Build: Benchmark`
  - `Build: Install`
  - `Build: Cross-Compile (Interactive)`
  - `Build: Clean`

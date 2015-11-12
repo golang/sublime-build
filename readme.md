@@ -9,7 +9,7 @@ The package consists of the following features:
    - `go build`
    - `go run`
    - `go install`
-   - `go test`
+   - `go test` to run Tests or Benchmarks
    - `go clean`
    - Cross-compilation using `go build` with `GOOS` and `GOARCH`
  - Sublime Text command palette commands to:
