@@ -955,7 +955,7 @@ class GolangPanel():
         panel_settings = self.panel.settings()
         panel_settings.set('syntax', 'Packages/Golang Build/Golang Build Output.tmLanguage')
         panel_settings.set('color_scheme', st_settings.get('color_scheme'))
-        panel_settings.set('result_file_regex', '^(.+\.go):([0-9]+):(?:([0-9]+):)?\s*(.*)')
+        panel_settings.set('result_file_regex', '^\s*(.+\.go):([0-9]+):(?:([0-9]+):)?\s*(.*)')
         panel_settings.set('draw_white_space', 'selection')
         panel_settings.set('word_wrap', False)
         panel_settings.set("auto_indent", False)
