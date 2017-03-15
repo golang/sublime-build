@@ -94,6 +94,10 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
         if (go_bin, env) == (None, None):
             return
 
+        # Set the PWD environment var to the working_dir
+        # so that potential vendor/ folder is scanned used
+        env.update(PWD=working_dir)
+
         if flags is None:
             flags, _ = golangconfig.setting_value(
                 '%s:flags' % task,
