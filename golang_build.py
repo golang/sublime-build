@@ -139,7 +139,9 @@ class GolangBuildCommand(sublime_plugin.WindowCommand):
                 flags = new_flags
 
             if not found_filename:
-                flags.append(self.window.active_view().file_name())
+                for file in os.listdir(working_dir):
+                    if file.endswith(".go"):
+                        flags.append(working_dir + "/" + file)
 
         if task == 'cross_compile':
             _task_cross_compile(
